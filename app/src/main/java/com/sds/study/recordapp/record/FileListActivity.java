@@ -13,7 +13,7 @@ import android.util.Log;
 
 import com.sds.study.recordapp.R;
 
-public class FileListActivity extends AppCompatActivity{
+public class FileListActivity extends AppCompatActivity implements ViewPager.OnPageChangeListener{
     String TAG;
     ViewPager viewPager;
     RecordPagerAdapter pagerAdapter;
@@ -27,6 +27,29 @@ public class FileListActivity extends AppCompatActivity{
         viewPager=(ViewPager)findViewById(R.id.viewPager);
         pagerAdapter = new RecordPagerAdapter(getSupportFragmentManager());
         viewPager.setAdapter(pagerAdapter);
+
+        /*리스너와의 연결*/
+        viewPager.addOnPageChangeListener(this);
+    }
+
+    @Override
+    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+        //Log.d(TAG, "onPageScrolled");
+    }
+
+    /*페이지가 선택이 확정되면...commit 되면...*/
+    public void onPageSelected(int position) {
+        Log.d(TAG, "onPageSelected");
+
+        DetailFragment detailFragment=(DetailFragment) pagerAdapter.fragments[1];
+        ListFragment listFragment=(ListFragment) pagerAdapter.fragments[0];
+        detailFragment.txt_filename.setText(listFragment.filename);
+
+    }
+
+    @Override
+    public void onPageScrollStateChanged(int state) {
+        Log.d(TAG, "onPageScrollStateChanged");
     }
 }
 

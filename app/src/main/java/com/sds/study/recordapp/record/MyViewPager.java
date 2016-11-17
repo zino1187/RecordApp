@@ -13,9 +13,14 @@ public class MyViewPager extends ViewPager{
         super(context, attrs);
     }
 
+
+/*
     public boolean onInterceptTouchEvent(MotionEvent ev) {
         return false;
     }
+*/
+
+
 }
 
 

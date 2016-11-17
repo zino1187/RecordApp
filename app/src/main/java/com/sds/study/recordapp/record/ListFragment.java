@@ -28,7 +28,7 @@ public class ListFragment extends Fragment implements AdapterView.OnItemClickLis
     ListView listView;
     ArrayAdapter<String> adapter;
     ArrayList<String> list;
-
+    String filename;
 
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view=inflater.inflate(R.layout.fragment_list,null);
@@ -61,7 +61,7 @@ public class ListFragment extends Fragment implements AdapterView.OnItemClickLis
 
     public void onItemClick(AdapterView<?> adapterView, View view, int index , long id) {
         TextView txt=(TextView) view;
-        String filename=txt.getText().toString();
+        filename=txt.getText().toString();
 
         Toast.makeText(getContext(),"파일명은 "+filename, Toast.LENGTH_SHORT ).show();
 

@@ -32,16 +32,7 @@ public class RecordMainActivity extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         TAG=this.getClass().getName();
         setContentView(R.layout.record_main);
-
         img=(ImageView)findViewById(R.id.img);
-        init();
-    }
-
-    public void init(){
-        recorder = new MediaRecorder();
-        recorder.setAudioSource(MediaRecorder.AudioSource.MIC);
-        recorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
-        recorder.setAudioEncoder(MediaRecorder.AudioEncoder.DEFAULT);
     }
 
     /*저장파일 구하기*/
@@ -63,11 +54,20 @@ public class RecordMainActivity extends AppCompatActivity{
     }
 
     public void startRecord(){
+        if(recorder==null) {
+            recorder = new MediaRecorder();
+            recorder.setAudioSource(MediaRecorder.AudioSource.MIC);
+            recorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
+            recorder.setAudioEncoder(MediaRecorder.AudioEncoder.DEFAULT);
+        }
+
         if(isRun){//정지상태라면...
             recorder.stop();
-            recorder.reset();/*재녹음을 위한 초기화*/
-            img.setImageResource(R.drawable.record);
+            recorder.release();
+
             isRun=false;
+            img.setImageResource(R.drawable.record);
+            recorder=null;
 
             /*녹음이 완료된 화면을 보여주자!!*/
             showList();
@@ -76,6 +76,7 @@ public class RecordMainActivity extends AppCompatActivity{
                 recorder.setOutputFile(getSaveFile());
                 recorder.prepare();
                 recorder.start();
+
                 isRun=true;
                 img.setImageResource(R.drawable.stop);
             } catch (IOException e) {
@@ -97,20 +98,24 @@ public class RecordMainActivity extends AppCompatActivity{
         }
     }
 
-    /*각종 권한을 체크하자*/
-    public void btnClick(View view){
+    public void checkPermission(){
         int writePermission= ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
         int recordPermission=ContextCompat.checkSelfPermission(this,Manifest.permission.RECORD_AUDIO);
 
         if(writePermission== PackageManager.PERMISSION_DENIED || recordPermission== PackageManager.PERMISSION_DENIED){
-                ActivityCompat.requestPermissions(this,
-                        new String[]{
+            ActivityCompat.requestPermissions(this,
+                    new String[]{
                             Manifest.permission.WRITE_EXTERNAL_STORAGE,
                             Manifest.permission.RECORD_AUDIO
-                        }, REQUEST_RECORD_PERMISSION);
-        }else {
+                    }, REQUEST_RECORD_PERMISSION);
+        }else{
             startRecord();
         }
+    }
+
+    /*각종 권한을 체크하자*/
+    public void btnClick(View view){
+        checkPermission();
     }
 
 }
